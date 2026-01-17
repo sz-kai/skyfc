@@ -31,7 +31,7 @@ typedef enum
 
 /**
  * @brief 微分器工作模式(误差微分/测量微分)
- * 
+ *
  */
 typedef enum
 {
@@ -48,16 +48,16 @@ typedef struct
     float Kp;
     float Ki;
     float Kd;
-    
-    float Output_Limit;     /* 总输出限幅 */
-    float Integral_Limit;   /* 积分限幅 */
+
+    float Output_Limit;   /* 总输出限幅 */
+    float Integral_Limit; /* 积分限幅 */
     // float DeadZone;         /* 死区 (误差在此范围内视为0) */
-    
-    float D_Term_Filter;    /* D项低通滤波系数 [0.0 ~ 1.0]. 1.0表示无滤波，0.1表示强滤波. 推荐 0.1~0.3 */
+
+    float D_Term_Filter; /* D项低通滤波系数 [0.0 ~ 1.0]. 1.0表示无滤波，0.1表示强滤波. 推荐 0.1~0.3 */
 
     /* --- 配置 (Config) --- */
-    PID_Mode_e Mode;                   /* 控制模式 (P/PI/PD/PID) */
-    PID_Integration_Mode_e Int_Mode;   /* 积分器模式 */
+    PID_Mode_e Mode;                       /* 控制模式 (P/PI/PD/PID) */
+    PID_Integration_Mode_e Int_Mode;       /* 积分器模式 */
     PID_Derivative_Mode_e Derivative_Mode; /* 微分器模式 */
 
     /* --- 运行时状态 (Runtime State) --- */
@@ -82,8 +82,8 @@ void PID_Init(PID_Handle_t *hpid,
 
 /**
  * @brief 设置 D 项滤波器系数 (飞控建议设置)
- * @param alpha: 0.0-1.0, 越小滤波越强(延迟越大). 
- *        经验公式: alpha = dt / (dt + 1/(2*pi*fc)) 
+ * @param alpha: 0.0-1.0, 越小滤波越强(延迟越大).
+ *        经验公式: alpha = dt / (dt + 1/(2*pi*fc))
  *        简单设定: 0.1 左右通常用于 400Hz 循环
  */
 void PID_SetFilter(PID_Handle_t *hpid, float d_lpf_alpha);

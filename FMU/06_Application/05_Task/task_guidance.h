@@ -17,21 +17,7 @@
 #define __TASK_GUIDANCE_H
 #include "pro_include.h"
 
-/**
- * @brief 最大期望滚转角(弧度)
- * 
- */
-#define SP_ROLL_MAX 30.0f*PI/180.0f
-/**
- * @brief 最大期望俯仰角(弧度)
- * 
- */
-#define SP_PITCH_MAX 30.0f*PI/180.0f
-/**
- * @brief 最大期望偏航角速度(弧度)
- * 
- */
-#define SP_YAW_RATE_MAX 30.0f*PI/180.0f
+
 /**
  * @brief 导航任务调用频率(Hz)，在计算期望偏航角时使用
  * 
@@ -54,5 +40,15 @@ void task_guidance(void);
  * @retval const setpoint_t* - 指向setpoint的指针
  */
 const angle_setpoint_t *get_setpoint(void);
+
+/**
+ * @brief 获取rc数据
+ * 
+ * @param map_data - 提供获取映射后rc数据的缓冲区，指向rc_map_data_t的指针
+ */
+// void get_rc(rc_map_data_t *map_data);
+rc_control_t get_rc_ctrl(void);
+rc_switch_t get_rc_switch(void);
+angle_setpoint_t get_angle_sp(void);
 
 #endif /* __TASK_GUIDANCE_H */

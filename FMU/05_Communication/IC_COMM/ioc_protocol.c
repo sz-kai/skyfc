@@ -219,6 +219,7 @@ static void ioc_payload_reset(IOC_handle_t *handle)
 //     handle->heartbeat_decode_done = SET;
 // }
 
+#if 0
 /**
  * @brief  发送IOC数据包
  * @note
@@ -237,6 +238,7 @@ static void ioc_send_packet(IOC_handle_t *handle, uint8_t *data, uint16_t length
     memcpy(handle->tx_buff, data, length);
     USART_DMA_Send(DMA2_Stream6, handle->tx_buff, length);
 }
+#endif
 
 /**
  * @brief  处理接收到的数据

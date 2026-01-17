@@ -18,16 +18,7 @@
 #include "pro_include.h"
 #include "pid.h"
 
-/**
- * @brief ÈýÖá¿ØÖÆÁ¦¾Ø
- *
- */
-typedef struct
-{
-    float roll;
-    float pitch;
-    float yaw;
-} control_torque_t;
+
 
 /**
  * @brief ×ËÌ¬¿ØÖÆ¾ä±ú
@@ -44,5 +35,17 @@ typedef struct
     PID_Handle_t pitch_rate_pid_handle;
     PID_Handle_t yaw_rate_pid_handle;
 } attitude_control_handle_t;
+
+
+
+void attitude_control_init(attitude_control_handle_t *handle);
+
+void attitude_control_outer_loop(attitude_control_handle_t *handle,
+                                 const angle_setpoint_t *setpoint, const Euler_u *measure, const float dt,
+                                 rate_setpoint_t *rate_sp);
+
+void attitude_control_inner_loop(attitude_control_handle_t *handle,
+                                 const rate_setpoint_t *setpoint, const Axis3_f_u *measure, const float dt, const float _thrust,
+                                 control_torque_t *out_torque);
 
 #endif /* __ATTITUDE_CONTROL_H */

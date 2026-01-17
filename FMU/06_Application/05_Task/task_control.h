@@ -17,5 +17,5 @@
 #include "pro_include.h"
 
 
-
+void task_control(void);
 #endif /* __TASK_CONTROL_H */

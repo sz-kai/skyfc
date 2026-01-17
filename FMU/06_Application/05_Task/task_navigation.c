@@ -1,6 +1,6 @@
 /**
  ******************************************************************************
- * @file    task_integrated_navigation.c
+ * @file    task_navigation.c
  * @author  kai
  * @version V1.0.0
  * @data    2025/09/30
@@ -12,13 +12,13 @@
  *
  ******************************************************************************
  */
-#include "task_integrated_navigation.h"
+#include "task_navigation.h"
 
 static Attitude_Estimate_t att_est; /*姿态解算结构体*/
 static Position_Estimate_t pos_est; /*位置估计结构体*/
 
 static attitude_t att;
-static pos_vel_t pos_vel;
+// static pos_vel_t pos_vel;
 
 /**
  * @brief  组合导航任务初始化
@@ -77,19 +77,68 @@ const attitude_t *get_attitude_estimate(void)
     return &att;
 }
 
+
+
 /**
- * @brief 获取位置估计结果
- *
+ * @brief 获取姿态
+ * 
  */
-const pos_vel_t *get_position_estimate(void)
+Euler_u get_euler(void)
 {
-    pos_vel.pos.x = pos_est.est_x[0];
-    pos_vel.pos.y = pos_est.est_y[0];
-    pos_vel.pos.z = pos_est.est_z[0];
-    pos_vel.vel.x = pos_est.est_x[1];
-    pos_vel.vel.y = pos_est.est_y[1];
-    pos_vel.vel.z = pos_est.est_z[1];
-    // pos_vel.pos_valid = pos_est.can_estimate_xy;
-    // pos_vel.vel_valid = pos_est.can_estimate_xy;
-    return &pos_vel;
+    Euler_u euler;
+    __disable_irq();
+    euler = att_est.euler;
+    /*开启中断*/
+    __enable_irq();
+    return euler;
 }
+
+/**
+ * @brief 获取角速度
+ * 
+ */
+Axis3_f_u get_rate(void)
+{
+    Axis3_f_u rate;
+    __disable_irq();
+    rate = flgt_ctl.sensor.gyro;
+    /*开启中断*/
+    __enable_irq();
+    return rate;
+}
+
+/**
+ * @brief 获取旋转矩阵
+ * 
+ */
+void get_rotation_matrix(float rot_mat[3][3])
+{
+    __disable_irq();
+    memcpy(rot_mat, att_est.Mahony_Param.DCM, sizeof(att_est.Mahony_Param.DCM));
+    /*开启中断*/
+    __enable_irq();
+}
+
+/**
+ * @brief 获取位置
+ * 
+ */
+pos_vel_t get_pos_vel(void)
+{
+    pos_vel_t pos_vel_temp;
+    __disable_irq();
+    pos_vel_temp.pos.x = pos_est.est_x[0];
+    pos_vel_temp.pos.y = pos_est.est_y[0];
+    pos_vel_temp.pos.z = pos_est.est_z[0];
+    pos_vel_temp.vel.x = pos_est.est_x[1];
+    pos_vel_temp.vel.y = pos_est.est_y[1];
+    pos_vel_temp.vel.z = pos_est.est_z[1];
+    /*开启中断*/
+    __enable_irq();
+    return pos_vel_temp;
+}
+
+
+
+
+

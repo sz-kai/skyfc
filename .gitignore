@@ -77,3 +77,5 @@ Release/
 slprj/
 *_ert_rtw/
 
+FMU/SkyFC-FMU.code-workspace
+FMU/Project/SkyFC-FMU.code-workspace

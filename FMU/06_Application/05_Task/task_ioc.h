@@ -5,5 +5,6 @@
 
 void task_ioc(void);
 const rc_raw_data_t *get_rc_raw_data(void);
+rc_raw_data_t get_raw_rc(void);
 
 #endif /* __TASK_IOC_H */

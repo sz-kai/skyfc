@@ -14,7 +14,6 @@
  */
 #include "attitude_control.h"
 
-
 /**
  * @brief 姿态控制初始化
  *
@@ -63,18 +62,30 @@ void attitude_control_init(attitude_control_handle_t *handle)
  * @param rate_sp - 输出,期望角速度指针
  */
 void attitude_control_outer_loop(attitude_control_handle_t *handle,
-                                 angle_setpoint_t *setpoint, attitude_t *measure, float dt,
-                                 angle_rate_setpoint_t *rate_sp)
+                                 const angle_setpoint_t *setpoint, const Euler_u *measure, const float dt,
+                                 rate_setpoint_t *rate_sp)
 {
     if (handle == NULL || setpoint == NULL || measure == NULL || dt <= 0.0f || rate_sp == NULL)
     {
         return;
     }
-
+    /*3. 计算误差*/
+    float roll_err = setpoint->roll - measure->roll;
+    float pitch_err = setpoint->pitch - measure->pitch;
+    float yaw_err = setpoint->yaw - measure->yaw;
+    /*yaw unwraping*/
+    if (yaw_err > PI)
+    {
+        yaw_err -= 2 * PI;
+    }
+    else if (yaw_err < -PI)
+    {
+        yaw_err += 2 * PI;
+    }
     /*1. 外环控制，输出期望角速度*/
-    rate_sp->roll = PID_Update(&handle->roll_pid_handle, setpoint->roll, measure->euler.roll, dt);
-    rate_sp->pitch = PID_Update(&handle->pitch_pid_handle, setpoint->pitch, measure->euler.pitch, dt);
-    rate_sp->yaw = PID_Update(&handle->yaw_pid_handle, setpoint->yaw, measure->euler.yaw, dt);
+    rate_sp->roll = PID_Update(&handle->roll_pid_handle, roll_err, measure->roll, dt);
+    rate_sp->pitch = PID_Update(&handle->pitch_pid_handle, pitch_err, measure->pitch, dt);
+    rate_sp->yaw = PID_Update(&handle->yaw_pid_handle, yaw_err, measure->yaw, dt);
     /*2. 处理期望值,输出到内环*/
     rate_sp->roll = rate_sp->roll * 0.05f;
     rate_sp->pitch = rate_sp->pitch * 0.05f;
@@ -91,7 +102,7 @@ void attitude_control_outer_loop(attitude_control_handle_t *handle,
  * @param out_torque - 输出,期望力矩指针
  */
 void attitude_control_inner_loop(attitude_control_handle_t *handle,
-                                 angle_rate_setpoint_t *setpoint, attitude_t *measure, float dt, float throttle,
+                                 const rate_setpoint_t *setpoint, const Axis3_f_u *measure, const float dt, const float _thrust,
                                  control_torque_t *out_torque)
 {
     if (handle == NULL || setpoint == NULL || measure == NULL || dt <= 0.0f || out_torque == NULL)
@@ -99,7 +110,7 @@ void attitude_control_inner_loop(attitude_control_handle_t *handle,
         return;
     }
     /*1. 油门值过小, 飞机停在地面时, 需要失能积分项*/
-    if (throttle < THROTTLE_MIN)
+    if (_thrust < THROTTLE_MIN)
     {
         PID_SetIntegralMode(&handle->roll_rate_pid_handle, PID_INT_RESET);
         PID_SetIntegralMode(&handle->pitch_rate_pid_handle, PID_INT_RESET);
@@ -112,7 +123,11 @@ void attitude_control_inner_loop(attitude_control_handle_t *handle,
         PID_SetIntegralMode(&handle->yaw_rate_pid_handle, PID_INT_NORMAL);
     }
     /*1. 内环控制，输出期望角速度*/
-    out_torque->roll = PID_Update(&handle->roll_rate_pid_handle, setpoint->roll, measure->gyro.x, dt);
-    out_torque->pitch = PID_Update(&handle->pitch_rate_pid_handle, setpoint->pitch, measure->gyro.y, dt);
-    out_torque->yaw = PID_Update(&handle->yaw_rate_pid_handle, setpoint->yaw, measure->gyro.z, dt);
+    /*误差*/
+    float rate_x_err = setpoint->roll - measure->x;
+    float rate_y_err = setpoint->pitch - measure->y;
+    float rate_z_err = setpoint->yaw - measure->z;
+    out_torque->roll = PID_Update(&handle->roll_rate_pid_handle, rate_x_err, measure->x, dt);
+    out_torque->pitch = PID_Update(&handle->pitch_rate_pid_handle, rate_y_err, measure->y, dt);
+    out_torque->yaw = PID_Update(&handle->yaw_rate_pid_handle, rate_z_err, measure->z, dt);
 }

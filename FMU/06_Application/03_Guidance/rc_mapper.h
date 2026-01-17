@@ -41,6 +41,6 @@
 //                     const rc_raw_data_t *p_rc_raw,
 //                     rc_map_data_t *p_rc_map);
 
-void rc_mapper(rc_map_data_t *p_rc_map, rc_raw_data_t *p_rc_raw);
+void rc_mapper(rc_raw_data_t *p_rc_raw,rc_control_t *rc_ctrl,rc_switch_t* rc_switch);
 
 #endif /* __RC_MAPPER_H */

@@ -1,17 +1,17 @@
 /**
-  ******************************************************************************
-  * @file    ProConfig.h
-  * @author  
-  * @version 
-  * @data    2025/06/18
-  * @brief   项目配置，定义了项目“应该是什么样的”，如PID参数是多少、主循环频率是多少、功能开关
-  ******************************************************************************
-  * @attention
-  *
-  * 
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    ProConfig.h
+ * @author
+ * @version
+ * @data    2025/06/18
+ * @brief   项目配置，定义了项目“应该是什么样的”，如PID参数是多少、主循环频率是多少、功能开关
+ ******************************************************************************
+ * @attention
+ *
+ *
+ *
+ ******************************************************************************
+ */
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __PRO_CONFIG_H
 #define __PRO_CONFIG_H
@@ -31,7 +31,7 @@
 #define LOOP_MAIN_RATE LOOP_1000_Hz
 /*循环频率设定*/
 /*Freq:设定频率,Tick:计数器,LOOP_RATE:循环频率*/
-#define LOOP_FREQ_SET(SET_Freq,Tick,LOOP_RATE) ((Tick%(LOOP_RATE/SET_Freq))==0)
+#define LOOP_FREQ_SET(SET_Freq, Tick, LOOP_RATE) ((Tick % (LOOP_RATE / SET_Freq)) == 0)
 /**********************************中断优先级配置**********************************/
 /*TIM6定时中断*/
 #define TIM6_DAC_IRQ_PRIORITY 15
@@ -48,8 +48,6 @@
 /*DMA2_Stream6_IRQ，用于USART6_TX，双机通信*/
 #define DMA2_C5_S6_IRQ_PRIORITY 1
 #define DMA2_C5_S6_IRQ_SUB_PRIORITY 1
-
-
 
 /**********************************RC配置**********************************/
 /*遥控器支持通道数*/
@@ -73,13 +71,13 @@
 #define ANGLE_PITCH_KP 600.0f
 #define ANGLE_YAW_KP 1500.0f
 /*角度环只有P*/
-#define ANGLE_ROLL_KI 
-#define ANGLE_PITCH_KI 
-#define ANGLE_YAW_KI 
+#define ANGLE_ROLL_KI
+#define ANGLE_PITCH_KI
+#define ANGLE_YAW_KI
 
-#define ANGLE_ROLL_KD 
-#define ANGLE_PITCH_KD 
-#define ANGLE_YAW_KD 
+#define ANGLE_ROLL_KD
+#define ANGLE_PITCH_KD
+#define ANGLE_YAW_KD
 /*角速度环*/
 #define RATE_ROLL_KP 80.0f
 #define RATE_PITCH_KP 80.0f
@@ -141,7 +139,7 @@
 /*标准大气压强*/
 #define CONFIG_BARO_STANDARD_PRESSURE 101325.0f
 #define CONFIG_BARO_ALTITUDE_CONVERSION_FACTOR 44330.8f
-#define CONFIG_BARO_ALTITUDE_CONVERSION_EXPONENT 1.0f/5.255f
+#define CONFIG_BARO_ALTITUDE_CONVERSION_EXPONENT 1.0f / 5.255f
 
 /***********************2.位置估计器相关*****************************/
 /*位置估计器参数*/
@@ -161,7 +159,6 @@
 /*位置估计器精度过低时，水平速度回退权值(回退至0)*/
 #define CONFIG_POS_EST_W_XY_RES_V 0.5f
 
-
 /*位置估计器缓冲区大小(存储最近N个位置估计、IMU、姿态等数据，用于索引同一时刻的数据用于解算，消除数据滞后)*/
 #define EST_BUFF_SIZE 25
 // /*旋转矩阵缓冲区大小(存储最近N个旋转矩阵数据，相当于旋转矩阵的估计器缓冲区，用于索引同一时刻的数据用于解算，消除数据滞)*/
@@ -172,6 +169,7 @@
 #define POS_EST_INTERVAL 20.0f
 /*旋转矩阵数据更新间隔(ms)(姿态估计器调用间隔)，注意，更改该值需要同时更改旋转矩阵数据更新频率*/
 #define ATT_EST_INTERVAL 10.0f
+
 /**********************************日志消息记录配置**********************************/
 /*使能日志记录，1:使能，0:不使能*/
 #define LOG_RECORD_ENABLE 1
@@ -198,17 +196,69 @@
 /*磁力计校准数据，1:记录，0:不记录*/
 #define LOG_RECORD_MAG_CAL 0
 
+/*===============================================================================================*/
+/*=========                                  姿态控制相关                                ==========*/
+/*===============================================================================================*/
+
+/**
+ * @brief 最大期望滚转角(弧度)
+ * 
+ */
+#define SP_ROLL_MAX 30.0f*PI/180.0f
+/**
+ * @brief 最大期望俯仰角(弧度)
+ * 
+ */
+#define SP_PITCH_MAX 30.0f*PI/180.0f
+/**
+ * @brief 最大期望偏航角速度(弧度)
+ * 
+ */
+#define SP_YAW_RATE_MAX 30.0f*PI/180.0f
 
 /*===============================================================================================*/
 /*=========                                  位置控制相关                                ==========*/
 /*===============================================================================================*/
+
+/*遥控死区，小于该值期望值为0*/
+#define RC_DEAD_ZONE 0.15f
+
 /**********************************飞机状态**********************************/
 /*油门限幅,影响飞机悬停与升降快慢*/
 #define THROTTLE_MAX 1200.0f
 /*最小油门*/
 #define THROTTLE_MIN 150.0f
 
+/**********************************attitude control**********************************/
 
+/*姿态控制外环更新频率（Hz）*/
+#define ATT_CTRL_OUTER_LOOP_UPDATE_FREQ 250
+/*姿态控制内环更新频率（Hz）*/
+#define ATT_CTRL_INNER_LOOP_UPDATE_FREQ 500
+
+/**********************************position control**********************************/
+
+/*位置控制更新频率*/
+#define POS_CTRL_UPDATE_FREQ 50
+
+/**
+ * @brief 最大速度可用于调节遥控器映射最大值(期望值)
+ *
+ */
+/*最大上升速度*/
+#define POS_CTRL_MAX_ASCEND_VEL 2.0f
+/*最大下降速度*/
+#define POS_CTRL_MAX_DESCEND_VEL 1.0f
+
+/*最大水平速度-X*/
+#define POS_CTRL_MAX_HOR_VEL_X 6.0f
+/*最大水平速度-Y*/
+#define POS_CTRL_MAX_HOR_VEL_Y 6.0f
+
+/*高度控制输出最大值*/
+#define POS_CTRL_HEIGHT_MAX_OUTPUT 1200.0f
+
+/*高度控制输出最小值(可能是为了防止负值输出不属于电机油门范围)*/
+#define POS_CTRL_HEIGHT_MIN_OUTPUT 0.0f
 
 #endif /* __PRO_CONFIG_H */
-

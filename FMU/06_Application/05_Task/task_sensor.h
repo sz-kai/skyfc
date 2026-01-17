@@ -49,4 +49,7 @@
 
 void Task_Sensor_Init(void);
 void Task_Sensor(void);
+Axis3_f_u get_acc(void);
+Axis3_f_u get_gyro(void);
+float get_baro(void);
 #endif /* __TASK_SENSOR_H */

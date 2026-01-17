@@ -34,8 +34,10 @@
 #include "ic_comm.h"
 #include "task_datalog.h"
 #include "task_sensor.h"
-#include "task_integrated_navigation.h"
+#include "task_navigation.h"
 #include "task_ioc.h"
+#include "task_control.h"
+
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

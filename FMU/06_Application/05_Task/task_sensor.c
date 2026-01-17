@@ -139,7 +139,7 @@ static void IMU_Write_RingBuff(void)
  * @param  无
  * @retval 无
  */
-void Task_IMU(void)
+static void Task_IMU(void)
 {
     /*获取imu原始数据*/
     MPU6000_GetData(&imu_raw_data.acc, &imu_raw_data.gyro);
@@ -179,6 +179,8 @@ void Task_IMU(void)
     /*将数据写入环形缓冲区*/
     IMU_Write_RingBuff();
 }
+
+
 
 static void MAG_Write_RingBuff(void)
 {
@@ -391,3 +393,65 @@ void Task_Sensor(void)
     Task_BARO();
     Task_GPS();
 }
+
+// /**
+//  * @brief 获取加速度数据
+//  * 
+//  */
+// void get_acc(Axis3_f_u *acc)
+// {
+//     *acc = imu_filter_data.acc;
+// }
+
+Axis3_f_u get_acc(void)
+{
+    __disable_irq();
+    Axis3_f_u acc = imu_filter_data.acc;
+    __enable_irq();
+    return acc;
+}
+
+/**
+ * @brief 获取角速度数据
+ * 
+ */
+Axis3_f_u get_gyro(void)
+{
+    __disable_irq();
+    Axis3_f_u gyro = imu_filter_data.gyro;
+    __enable_irq();
+    return gyro;
+}
+
+/**
+ * @brief 获取磁力计数据
+ * 
+ */
+MAG_Data_t get_mag(void)
+{
+    __disable_irq();
+    MAG_Data_t mag =mag_cal_data;
+    __enable_irq();
+    return mag;
+}
+
+/**
+ * @brief 获取气压计高度数据
+ * 
+ */
+float get_baro(void)
+{
+    __disable_irq();
+    float alt = sensor_handle.baro_proc_handle.altitude_m;
+    __enable_irq();
+    return alt;
+}
+
+// /**
+//  * @brief 获取GPS数据
+//  * 
+//  */
+// void get_gps(GPS_Data_t *gps)
+// {
+//     *gps = flgt_ctl.sensor.gps;
+// }

@@ -21,13 +21,31 @@
  * @brief 归一化后的rc数据
  *
  */
-static rc_map_data_t rc_map_data;
+// static rc_map_data_t rc_map_data;
 
 /**
- * @brief 期望值(设定点)
+ * @brief rc控制通道数据
  *
  */
-static angle_setpoint_t angle_sp;
+static rc_control_t rc_ctrl_data;
+
+/**
+ * @brief rc开关通道数据
+ *
+ */
+static rc_switch_t rc_switch_data;
+
+/**
+ * @brief 姿态期望值(设定点)
+ *
+ */
+angle_setpoint_t angle_sp;
+
+/**
+ * @brief 角速度期望值(设定点)
+ *
+ */
+rate_setpoint_t rate_sp;
 
 /**
  * @brief 期望滚转角计算
@@ -85,7 +103,6 @@ static void setpoint_yaw_calc(float rc_map, float *yaw_sp)
 
 void task_guidance_init(void)
 {
-    
 }
 
 /**
@@ -94,22 +111,61 @@ void task_guidance_init(void)
  */
 void task_guidance(void)
 {
-    rc_raw_data_t raw_data;
     /*1. RC数据映射*/
-    memcpy(&raw_data, get_rc_raw_data(), sizeof(rc_raw_data_t));
-    rc_mapper(&rc_map_data, &raw_data);
+    // memcpy(&raw_data, get_rc_raw_data(), sizeof(rc_raw_data_t));
+    rc_raw_data_t raw_data = get_raw_rc();
+    rc_mapper(&raw_data, &rc_ctrl_data, &rc_switch_data);
     /*2. 期望值生成*/
-    angle_sp.roll = setpoint_roll_calc(rc_map_data.roll);
-    angle_sp.pitch = setpoint_pitch_calc(rc_map_data.pitch);
-    setpoint_yaw_calc(rc_map_data.yaw, &angle_sp.yaw);
+    angle_sp.roll = setpoint_roll_calc(rc_ctrl_data.roll);
+    angle_sp.pitch = setpoint_pitch_calc(rc_ctrl_data.pitch);
+    setpoint_yaw_calc(rc_ctrl_data.yaw, &angle_sp.yaw);
+}
+
+// /**
+//  * @brief 获取期望点
+//  *
+//  * @retval const setpoint_t* - 指向setpoint的指针
+//  */
+// const angle_setpoint_t *get_setpoint(void)
+// {
+//     return &angle_sp;
+// }
+
+/**
+ * @brief 获取rc数据
+ *
+ */
+
+/**
+ * @brief 获取rc控制通道数据
+ * 
+ * @return rc_control_t - rc控制通道数据
+ */
+rc_control_t get_rc_ctrl(void)
+{
+    __disable_irq();
+    rc_control_t rc= rc_ctrl_data;
+    __enable_irq();
+    return rc;
 }
 
 /**
- * @brief 获取期望点
- *
- * @retval const setpoint_t* - 指向setpoint的指针
+ * @brief 获取rc开关通道数据
+ * 
+ * @return rc_switch_t - rc开关通道数据
  */
-const angle_setpoint_t *get_setpoint(void)
+rc_switch_t get_rc_switch(void)
 {
-    return &angle_sp;
+    __disable_irq();
+    rc_switch_t rc= rc_switch_data;
+    __enable_irq();
+    return rc;
+}
+
+angle_setpoint_t get_angle_sp(void)
+{
+    __disable_irq();
+    angle_setpoint_t sp = angle_sp;
+    __enable_irq();
+    return sp;
 }

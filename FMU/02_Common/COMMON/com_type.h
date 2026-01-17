@@ -371,7 +371,7 @@ typedef struct
     float pitch;
     float yaw;
     float throttle;
-} rc_ctrl_t;
+} rc_control_t;
 
 /**
  * @brief 遥控器开关状态结构体
@@ -393,7 +393,7 @@ typedef struct
 typedef struct
 {
     // rc_data_raw_t raw;   /*接收到的原始数据*/
-    rc_ctrl_t ctrl; /*控制通道数据*/
+    rc_control_t ctrl; /*控制通道数据*/
     rc_switch_t sw; /*开关状态数据*/
 } rc_data_t;
 
@@ -419,6 +419,8 @@ typedef struct
     uint8_t switch_D;
     uint8_t switch_E;
 } rc_map_data_t;
+
+
 
 /*===============================================================================================*/
 /*=========                                 期望值                                      ==========*/
@@ -446,8 +448,22 @@ typedef struct
     float roll;  /*期望滚转角速率*/
     float pitch; /*期望俯仰角速率*/
     float yaw;   /*期望偏航角速率*/
-} angle_rate_setpoint_t;
+} rate_setpoint_t;
 
+
+/*===============================================================================================*/
+/*=========                                 控制输入                                      ==========*/
+/*===============================================================================================*/
+/**
+ * @brief 三轴控制力矩
+ *
+ */
+typedef struct
+{
+    float roll;
+    float pitch;
+    float yaw;
+} control_torque_t;
 
 
 /**********************************飞行控制数据******************************************/

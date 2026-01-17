@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    task_integrated_navigation.h
+  * @file    task_navigation.h
   * @author  kai
   * @version V1.0.0
   * @data    2025/09/30
@@ -12,8 +12,8 @@
   *
   ******************************************************************************
   */
-#ifndef __TASK_INTEGRATED_NAVIGATION_H
-#define __TASK_INTEGRATED_NAVIGATION_H
+#ifndef __TASK_NAVIGATION_H
+#define __TASK_NAVIGATION_H
 #include "pro_include.h"
 #include "attitude_estimate.h"
 #include "position_estimate.h"
@@ -51,6 +51,20 @@ void Task_IntegratedNavigation_Init(void);
 void Task_IntegratedNavigation(void);
 const attitude_t *get_attitude_estimate(void);
 const pos_vel_t *get_position_estimate(void);
+
+Euler_u get_euler(void);
+Axis3_f_u get_rate(void);
+void get_rotation_matrix(float rot_mat[3][3]);
+
+/**
+ * @brief 获取位置数据，不要使用get_position_estimate以防止数据撕裂现象
+ * 
+ * @param pos_vel - 
+ */
+pos_vel_t get_pos_vel(void);
+
+
+
 #endif
 
 

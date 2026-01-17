@@ -88,6 +88,19 @@ const rc_raw_data_t *get_rc_raw_data(void)
     return &rc_raw;
 }
 
+/**
+ * @brief Get the raw rc object
+ * 
+ * @return const rc_raw_data_t 
+ */
+rc_raw_data_t get_raw_rc(void)
+{
+    __disable_irq();
+    rc_raw_data_t rc= rc_raw;
+    __enable_irq();
+    return rc;
+}
+
 ///**
 // * @brief  发送IOC数据包
 // * @note

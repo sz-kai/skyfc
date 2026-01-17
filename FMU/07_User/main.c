@@ -42,6 +42,8 @@ void TIM6_DAC_IRQHandler(void)
             Task_Sensor();
             /*组合导航任务，500hz*/
             Task_IntegratedNavigation();
+            /*飞行控制任务，500hz*/
+            task_control();
         }
         /*50hz任务*/
         if (LOOP_FREQ_SET(LOOP_500_Hz, Tick, LOOP_MAIN_RATE))

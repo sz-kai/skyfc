@@ -127,19 +127,19 @@ void PID_ClearState(PID_Handle_t *hpid)
  * @brief 计算 PID 控制器的输出
  *
  * @param hpid - PID 句柄指针
- * @param setpoint - 设定值
- * @param measure - 当前测量值
+ * @param error - 误差值
+ * @param measure - 当前测量值(用于微分先行)
  * @param dt - 时间间隔 (单位：秒)
  * @return float - 计算得到的输出值
  */
-float PID_Update(PID_Handle_t *hpid, float setpoint, float measure, float dt)
+float PID_Update(PID_Handle_t *hpid, float error, float measure, float dt)
 {
     if (hpid == NULL || hpid->Mode == PID_MODE_NONE)
         return 0.0f;
     if (dt <= 0.0f)
         return hpid->Output; // 防止除零
 
-    float error = setpoint - measure;
+    // float error = setpoint - measure;
 
     // /* 死区处理 (可选) */
     // if (ABS(error) < hpid->DeadZone)

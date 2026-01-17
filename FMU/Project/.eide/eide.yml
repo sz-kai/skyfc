@@ -1,5 +1,5 @@
 version: "4.1"
-name: pro
+name: SkyFC-FMU
 type: ARM
 deviceName: null
 packDir: null
@@ -146,15 +146,16 @@ virtualFolder:
         - name: 05_Control
           files:
             - path: ../06_Application/04_Control/attitude_control.c
+            - path: ../06_Application/04_Control/position_control.c
           folders: []
         - name: 06_Task
           files:
             - path: ../06_Application/05_Task/task_datalog.c
-            - path: ../06_Application/05_Task/task_integrated_navigation.c
             - path: ../06_Application/05_Task/task_sensor.c
             - path: ../06_Application/05_Task/task_ioc.c
             - path: ../06_Application/05_Task/task_guidance.c
             - path: ../06_Application/05_Task/task_control.c
+            - path: ../06_Application/05_Task/task_navigation.c
           folders: []
     - name: 08_User
       files:
@@ -218,6 +219,8 @@ targets:
     excludeList:
       - <virtual_root>/Libraries/STM32F4xx_StdPeriph_Driver/stm32f4xx_fsmc.c
       - <virtual_root>/BSP/bsp_sys.c
+      - <virtual_root>/01_Libraries/STM32F4xx_StdPeriph_Driver/stm32f4xx_fsmc.c
+      - <virtual_root>/04_Peripherals/bsp_sys.c
     toolchain: AC5
     toolchainConfigMap:
       AC5:
