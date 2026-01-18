@@ -156,6 +156,7 @@ virtualFolder:
             - path: ../06_Application/05_Task/task_guidance.c
             - path: ../06_Application/05_Task/task_control.c
             - path: ../06_Application/05_Task/task_navigation.c
+            - path: ../06_Application/05_Task/scheduler.c
           folders: []
     - name: 08_User
       files:

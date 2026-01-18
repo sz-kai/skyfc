@@ -19,31 +19,7 @@
 #include "position_control.h"
 #include "task_sensor.h"
 
-attitude_control_handle_t att_ctrl_handle;
-position_control_handle_t pos_ctrl_handle;
-/**
- * @brief 姿态期望值(设定点)
- *
- */
-extern angle_setpoint_t angle_sp;
 
-/**
- * @brief 角速度期望值(设定点)
- *
- */
-extern rate_setpoint_t rate_sp;
-
-/**
- * @brief 升力
- *
- */
-static float _thrust;
-
-/**
- * @brief 控制力矩
- *
- */
-static control_torque_t _control_torque;
 
 /*姿态控制外环更新时间间隔*/
 #define ATT_CTRL_OUTER_LOOP_UPDATE_INTERVAL (1.0f / ATT_CTRL_OUTER_LOOP_UPDATE_FREQ)
